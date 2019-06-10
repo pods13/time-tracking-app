@@ -1,0 +1,23 @@
+{
+  "name": "time-tracking-app",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/pods13/time-tracking-app.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/pods13/time-tracking-app/issues"
+  },
+  "homepage": "https://github.com/pods13/time-tracking-app#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
