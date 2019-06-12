@@ -22,10 +22,27 @@ class TimersDashboard extends React.Component {
 			<div className='ui three column centered grid'>
 				<div className='column'>
 					<EditableTimerList timers={this.state.timers}/>
-					<ToggleableTimerForm />
+					<ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit}/>
 				</div>
 			</div>
 		);
+	}
+
+	handleCreateFormSubmit = (timerData) => {
+		this.createNewTimer(timerData);
+	}
+
+	createNewTimer = (timerData) => {
+		const newTimer = {
+			id: uuid.v4(),
+			title: timerData.title || 'Timer',
+			project: timerData.project || 'Project',
+			elapsed: 0
+		};
+
+		this.setState({ 
+			timers: this.state.timers.concat(newTimer)
+		});
 	}
 }
 
@@ -86,7 +103,7 @@ class TimerForm extends React.Component {
 	}
 
 	render() {
-		const submitText = this.props.title ? 'Update' : 'Create';
+		const submitText = this.props.id ? 'Update' : 'Create';
 		return (
 			<div className='ui centered card'>
 				<div className='content'>
@@ -100,10 +117,10 @@ class TimerForm extends React.Component {
 							<input type='text' value={this.state.project} onChange={this.handleProjectChange}/>
 						</div>
 						<div className='ui two bottom attached buttons'>
-							<button className='ui basic blue button'>
+							<button className='ui basic blue button' onClick={this.handleSubmit}>
 								{submitText}
 							</button>
-							<button className='ui basic red button'>Cancel</button>
+							<button className='ui basic red button' onClick={this.props.onFormClose}>Cancel</button>
 						</div>
 					</div>
 				</div>
@@ -117,6 +134,13 @@ class TimerForm extends React.Component {
 
 	handleProjectChange = (e) => {
 		this.setState({ project: e.target.value });
+	}
+
+	handleSubmit = () => {
+		this.props.onFormSubmit({
+			title: this.state.title,
+			project: this.state.project
+		});
 	}
 }
 
@@ -163,7 +187,10 @@ class ToggleableTimerForm extends React.Component {
 	render() {
 		if(this.state.isOpen) {
 			return (
-				<TimerForm />
+				<TimerForm 
+					onFormSubmit={this.handleFormSubmit}
+					onFormClose={this.handleFormClose}
+				/>
 			);
 		} else {
 			return (
@@ -178,6 +205,14 @@ class ToggleableTimerForm extends React.Component {
 
 	handleFormOpen = () => {
 		this.setState({ isOpen: true });
+	}
+
+	handleFormSubmit = (timerData) => {
+		this.props.onFormSubmit(timerData);
+	}
+
+	handleFormClose = () => {
+		this.setState({ isOpen: false });
 	}
 }
 
