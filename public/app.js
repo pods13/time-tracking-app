@@ -34,6 +34,8 @@ class EditableTimerList extends React.Component {
 	render() {
 		const editableTimers = this.props.timers.map(timer => {
 			return <EditableTimer
+					key={timer.id}
+					id={timer.id}
 					title={timer.title}
 					project={timer.project}
 					elapsed={timer.elapsed}
