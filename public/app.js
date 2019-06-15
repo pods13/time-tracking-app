@@ -226,9 +226,9 @@ class Timer extends React.Component {
 						</span>
 					</div>
 				</div>
-				<div className='ui bottom attached blue basic button'>
-					Start
-				</div>
+				<TimerActionButton 
+					timerIsRunning={!!this.props.runningSince}
+				/>
 			</div>
 		);
 	}
@@ -266,7 +266,26 @@ class Timer extends React.Component {
 		}
 		return padded;
 	}
+}
 
+class TimerActionButton extends React.Component {
+
+	render() {
+		if(this.props.timerIsRunning) {
+			return (
+				<div className='ui bottom attached red basic button'>
+					Stop
+				</div>
+			);
+		} else {
+			return (
+				<div className='ui bottom attached green basic button'>
+					Start
+				</div>
+			);
+
+		}
+	}
 }
 
 class ToggleableTimerForm extends React.Component {
