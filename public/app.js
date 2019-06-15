@@ -26,6 +26,7 @@ class TimersDashboard extends React.Component {
 						onFormSubmit={this.handleEditFormSubmit}
 						onTrashClick={this.handleTrashClick}
 						onStartClick={this.handleStartClick}
+						onStopClick={this.handleStopClick}
 					/>
 					<ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit}/>
 				</div>
@@ -80,6 +81,23 @@ class TimersDashboard extends React.Component {
 
 		this.setState({ timers });
 	}
+
+	handleStopClick = (timerId) => {
+		const now = Date.now();
+		const timers = this.state.timers.map(timer => {
+			if(timer.id === timerId) {
+				const elapsed = timer.elapsed + (now - timer.runningSince);
+				return Object.assign({}, timer, {
+					elapsed,
+					runningSince: null
+				});
+			}
+
+			return timer;
+		});
+
+		this.setState({ timers });
+	}
 }
 
 class EditableTimerList extends React.Component {
@@ -96,6 +114,7 @@ class EditableTimerList extends React.Component {
 					onFormSubmit={this.props.onFormSubmit}
 					onTrashClick={this.props.onTrashClick}
 					onStartClick={this.props.onStartClick}
+					onStopClick={this.props.onStopClick}
 				/>
 		});
 		return (
@@ -134,6 +153,7 @@ class EditableTimer extends React.Component {
 					onEditClick={this.handleEditClick}
 					onTrashClick={this.props.onTrashClick}
 					onStartClick={this.props.onStartClick}
+					onStopClick={this.props.onStopClick}
 				/>
 			);
 		}
@@ -245,6 +265,7 @@ class Timer extends React.Component {
 				<TimerActionButton 
 					timerIsRunning={!!this.props.runningSince}
 					onStartClick={this.handleStartClick}
+					onStopClick={this.handleStopClick}
 				/>
 			</div>
 		);
@@ -256,6 +277,10 @@ class Timer extends React.Component {
 
 	handleStartClick = () => {
 		this.props.onStartClick(this.props.id);
+	}
+
+	handleStopClick = () => {
+		this.props.onStopClick(this.props.id);
 	}
 
 	renderElapsedString = (elapsed, runningSince) => {
@@ -294,7 +319,7 @@ class TimerActionButton extends React.Component {
 	render() {
 		if(this.props.timerIsRunning) {
 			return (
-				<div className='ui bottom attached red basic button'>
+				<div className='ui bottom attached red basic button' onClick={this.props.onStopClick}>
 					Stop
 				</div>
 			);
