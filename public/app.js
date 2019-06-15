@@ -12,7 +12,8 @@ class TimersDashboard extends React.Component {
 				  "title": "Clear paper jam",
 				  "project": "Office Chores",
 				  "elapsed": 1273998,
-				  "id": "a73c1d19-f32d-4aff-b470-cea4e792406a"
+				  "id": "a73c1d19-f32d-4aff-b470-cea4e792406a",
+				  "runningSince": 1456225941911
 				}
 		]
 	}
@@ -77,7 +78,7 @@ class EditableTimerList extends React.Component {
 					title={timer.title}
 					project={timer.project}
 					elapsed={timer.elapsed}
-					runningSince={null}
+					runningSince={timer.runningSince}
 					onFormSubmit={this.props.onFormSubmit}
 					onTrashClick={this.props.onTrashClick}
 				/>
@@ -114,6 +115,7 @@ class EditableTimer extends React.Component {
 					title={this.props.title}
 					project={this.props.project}
 					elapsed={this.props.elapsed}
+					runningSince={this.props.runningSince}
 					onEditClick={this.handleEditClick}
 					onTrashClick={this.props.onTrashClick}
 				/>
@@ -191,8 +193,16 @@ class TimerForm extends React.Component {
 
 class Timer extends React.Component {
 
+	componentDidMount() {
+		this.forceUpdateInterval = setInterval(() => this.forceUpdate(), 50);
+	}
+
+	componentWillUnmount() {
+		clearInterval(this.forceUpdateInterval);
+	}
+
 	render() {
-		const elapsedString = this.convertMillisecondsToHuman(this.props.elapsed);
+		const elapsedString = this.renderElapsedString(this.props.elapsed, this.props.runningSince);
 		return (
 			<div className='ui centered card'>
 				<div className='content'>
@@ -227,7 +237,15 @@ class Timer extends React.Component {
 		this.props.onTrashClick(this.props.id);
 	}
 
-	convertMillisecondsToHuman = (ms) => {
+	renderElapsedString = (elapsed, runningSince) => {
+		let totalElapsed = elapsed;
+		if (runningSince) {
+			totalElapsed += Date.now() - runningSince;
+		}
+		return this.convertMillisecondsToHumanFormat(totalElapsed);
+	}
+
+	convertMillisecondsToHumanFormat = (ms) => {
 		const seconds = Math.floor((ms / 1000) % 60);
 		const minutes = Math.floor((ms / 1000 / 60) % 60);
 		const hours = Math.floor(ms / 1000 / 60 / 60);
