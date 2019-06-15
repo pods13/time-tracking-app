@@ -25,6 +25,7 @@ class TimersDashboard extends React.Component {
 					<EditableTimerList timers={this.state.timers} 
 						onFormSubmit={this.handleEditFormSubmit}
 						onTrashClick={this.handleTrashClick}
+						onStartClick={this.handleStartClick}
 					/>
 					<ToggleableTimerForm onFormSubmit={this.handleCreateFormSubmit}/>
 				</div>
@@ -66,6 +67,19 @@ class TimersDashboard extends React.Component {
 
 		this.setState({ timers });
 	}
+
+	handleStartClick = (timerId) => {
+		const now = Date.now();
+		const timers = this.state.timers.map(timer => {
+			if(timer.id === timerId) {
+				return Object.assign({}, timer, {runningSince: now});
+			}
+
+			return timer;
+		});
+
+		this.setState({ timers });
+	}
 }
 
 class EditableTimerList extends React.Component {
@@ -81,6 +95,7 @@ class EditableTimerList extends React.Component {
 					runningSince={timer.runningSince}
 					onFormSubmit={this.props.onFormSubmit}
 					onTrashClick={this.props.onTrashClick}
+					onStartClick={this.props.onStartClick}
 				/>
 		});
 		return (
@@ -118,6 +133,7 @@ class EditableTimer extends React.Component {
 					runningSince={this.props.runningSince}
 					onEditClick={this.handleEditClick}
 					onTrashClick={this.props.onTrashClick}
+					onStartClick={this.props.onStartClick}
 				/>
 			);
 		}
@@ -228,6 +244,7 @@ class Timer extends React.Component {
 				</div>
 				<TimerActionButton 
 					timerIsRunning={!!this.props.runningSince}
+					onStartClick={this.handleStartClick}
 				/>
 			</div>
 		);
@@ -235,6 +252,10 @@ class Timer extends React.Component {
 
 	handleTrashClick = () => {
 		this.props.onTrashClick(this.props.id);
+	}
+
+	handleStartClick = () => {
+		this.props.onStartClick(this.props.id);
 	}
 
 	renderElapsedString = (elapsed, runningSince) => {
@@ -279,7 +300,7 @@ class TimerActionButton extends React.Component {
 			);
 		} else {
 			return (
-				<div className='ui bottom attached green basic button'>
+				<div className='ui bottom attached green basic button' onClick={this.props.onStartClick}>
 					Start
 				</div>
 			);
