@@ -192,6 +192,7 @@ class TimerForm extends React.Component {
 class Timer extends React.Component {
 
 	render() {
+		const elapsedString = this.convertMillisecondsToHuman(this.props.elapsed);
 		return (
 			<div className='ui centered card'>
 				<div className='content'>
@@ -203,7 +204,7 @@ class Timer extends React.Component {
 					</div>
 					<div className='center aligned description'>
 						<h2>
-							{this.props.elapsed}
+							{elapsedString}
 						</h2>
 					</div>
 					<div className='extra content'>
@@ -224,6 +225,28 @@ class Timer extends React.Component {
 
 	handleTrashClick = () => {
 		this.props.onTrashClick(this.props.id);
+	}
+
+	convertMillisecondsToHuman = (ms) => {
+		const seconds = Math.floor((ms / 1000) % 60);
+		const minutes = Math.floor((ms / 1000 / 60) % 60);
+		const hours = Math.floor(ms / 1000 / 60 / 60);
+
+		const humanized = [
+			this.pad(hours.toString(), 2),
+			this.pad(minutes.toString(), 2),
+			this.pad(seconds.toString(), 2),
+		].join(':');
+
+		return humanized;
+	}
+
+	pad = (numberString, size) => {
+		let padded = numberString;
+		while (padded.length < size) {
+			padded = `0${padded}`;
+		}
+		return padded;
 	}
 
 }
