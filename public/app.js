@@ -1,21 +1,16 @@
 class TimersDashboard extends React.Component {
 
 	state = {
-		timers: [
-				{
-				  "title": "Mow the lawn",
-				  "project": "House Chores",
-				  "elapsed": 5456099,
-				  "id": "0a4a79cb-b06d-4cb1-883d-549a1e3b66d7"
-				},
-				{
-				  "title": "Clear paper jam",
-				  "project": "Office Chores",
-				  "elapsed": 1273998,
-				  "id": "a73c1d19-f32d-4aff-b470-cea4e792406a",
-				  "runningSince": 1456225941911
-				}
-		]
+		timers: []
+	}
+
+	componentDidMount() {
+		this.fetchTimers();
+		setInterval(this.fetchTimers, 5000);
+	}
+
+	fetchTimers = () => {
+		client.getTimers((timers) => this.setState({timers}));
 	}
 
 	render() {
