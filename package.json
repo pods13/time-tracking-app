@@ -18,7 +18,7 @@
   },
   "homepage": "https://github.com/pods13/time-tracking-app#readme",
   "dependencies": {
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "nodemon": "^1.19.1"
   }
 }
